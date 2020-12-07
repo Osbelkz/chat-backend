@@ -1,7 +1,10 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 var socket = require('socket.io')(http);
+const cors = require("cors")
 
+app.use(cors());
+app.options("*", cors());
 app.get('/', (req, res) => {
     res.send("hello from server");
 });
@@ -9,19 +12,19 @@ app.get('/', (req, res) => {
 const messages = [
     {message: "Hello Di", id: "23425w", user: {id: "asdfasd", name: "Os"}},
     {message: "Hello os", id: "23425wsdf", user: {id: "fsdsfda", name: "Di"}},
-]
+];
 
 socket.on('connection', (socketChannel) => {
     console.log('a user connected');
 
-    socketChannel.emit("init-messages-published", messages)
+    socketChannel.emit("init-messages-published", messages);
 
     socketChannel.on('client-message-sent', (message: string) => {
         console.log(message);
     });
 });
 
-const PORT = process.env.PORT || 3008
+const PORT = process.env.PORT || 3008;
 
 http.listen(PORT, () => {
     console.log('listening on *:3008');
