@@ -29,7 +29,7 @@ socket.on('connection', (socketChannel) => {
         user.name = name;
     })
     socketChannel.on("client-typing", (name: string) => {
-        socket.emit("user-typing", usersState.get(socketChannel))
+        socketChannel.broadcast.emit("user-typing", usersState.get(socketChannel))
     })
     socketChannel.emit("init-messages-published", messages);
 
