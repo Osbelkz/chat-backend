@@ -28,7 +28,9 @@ socket.on('connection', (socketChannel) => {
         const user = usersState.get(socketChannel);
         user.name = name;
     })
-
+    socketChannel.on("client-typing", (name: string) => {
+        socket.emit("user-typing", usersState.get(socketChannel))
+    })
     socketChannel.emit("init-messages-published", messages);
 
     socketChannel.on('client-message-sent', (message: string) => {
