@@ -1,10 +1,13 @@
 var app = require('express')();
 var http = require('http').createServer(app);
-var socket = require('socket.io')(http);
-const cors = require("cors")
+const socket = require("socket.io")(http, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    }
+});
 
-app.use(cors());
-app.options("*", cors());
+
 app.get('/', (req, res) => {
     res.send("hello from server");
 });
@@ -20,6 +23,7 @@ socket.on('connection', (socketChannel) => {
     socketChannel.emit("init-messages-published", messages);
 
     socketChannel.on('client-message-sent', (message: string) => {
+        messages.push({message: "Hello os", id: "23425wsdf", user: {id: "fsdsfda", name: "Di"}})
         console.log(message);
     });
 });
