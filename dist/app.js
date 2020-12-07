@@ -1,34 +1,22 @@
-// import express from 'express';
-// import http from 'http';
-// import socketIo from 'socket.io';
-//
-//
-// const app = express();
-// const server = http.createServer(app);
-// const io = socketIo(server)
-//
-// app.get('/', (req, res) => {
-//     res.send("hello my server");
-// });
-//
-// io.on('connection', (socket) => {
-//     console.log('a user connected');
-// });
-//
-// server.listen(3009, () => {
-//     console.log('listening on *:3009');
-// });
 var app = require('express')();
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+var socket = require('socket.io')(http);
 app.get('/', (req, res) => {
     res.send("hello from server");
 });
-io.on('connection', (socket) => {
+const messages = [
+    { message: "Hello Di", id: "23425w", user: { id: "asdfasd", name: "Os" } },
+    { message: "Hello os", id: "23425wsdf", user: { id: "fsdsfda", name: "Di" } },
+];
+socket.on('connection', (socketChannel) => {
     console.log('a user connected');
+    socketChannel.emit("init-messages-published", messages);
+    socketChannel.on('client-message-sent', (message) => {
+        console.log(message);
+    });
 });
-const PORT = process.env.PORT || 3009;
+const PORT = process.env.PORT || 3008;
 http.listen(PORT, () => {
-    console.log('listening on *:3009');
+    console.log('listening on *:3008');
 });
 //# sourceMappingURL=app.js.map
