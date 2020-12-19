@@ -20,7 +20,7 @@ socket.on('connection', (socketChannel) => {
     console.log('a user connected');
     usersState.set(socketChannel, {id: new Date().getTime().toString(), name: "anonym"})
 
-    socketChannel.on("disconnect", (name: string) => {
+    socket.on("disconnect", (name: string) => {
         usersState.delete(socketChannel)
     })
 
@@ -31,7 +31,9 @@ socket.on('connection', (socketChannel) => {
     socketChannel.on("client-typing", (name: string) => {
         socketChannel.broadcast.emit("user-typing", usersState.get(socketChannel))
     })
-    socketChannel.emit("init-messages-published", messages);
+    socketChannel.emit("init-messages-published", messages, () => {
+        console.log("init messages received ")
+    });
 
     socketChannel.on('client-message-sent', (message: string) => {
         if ( typeof message !== "string") {
